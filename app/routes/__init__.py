@@ -8,8 +8,8 @@ def health() -> tuple:
     return jsonify({"status": "ok"}), 200
 
 from app.routes.contacts import contacts
+from app.routes.frontend import frontend
 
 api.register_blueprint(contacts)
 
-api_bp = api
-__all__ = ["api_bp"]
+__all__ = ["api", "frontend"]

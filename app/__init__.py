@@ -13,8 +13,17 @@ migrate = Migrate()
 
 def _database_uri() -> str:
     """Build the database URI from .env settings, defaulting to local SQLite."""
-    db_path = os.getenv("DATABASE_PATH", "app/db/app.sqlite")
-    return f"sqlite:///{db_path}"
+    from pathlib import Path
+
+    # Get the absolute path to this __init__.py file
+    base_dir = Path(__file__).resolve().parent  # /Users/charliegraham/code/projects/contacts/app
+    db_file = Path(os.getenv("DATABASE_PATH", "db/app.sqlite"))
+    full_path = base_dir / db_file
+
+    # Ensure folder exists
+    full_path.parent.mkdir(parents=True, exist_ok=True)
+
+    return f"sqlite:///{full_path}"
 
 
 def create_app() -> Flask:
@@ -34,13 +43,9 @@ def create_app() -> Flask:
     db.init_app(app)
     migrate.init_app(app, db)
 
-    from app.routes import api_bp
+    from app.routes import api, frontend
 
-    app.register_blueprint(api_bp, url_prefix="/api")
-
-    # Serve frontend
-    @app.route("/")
-    def index():
-        return render_template("index.html", test="Hello, World")
+    app.register_blueprint(api, url_prefix="/api")
+    app.register_blueprint(frontend)
 
     return app

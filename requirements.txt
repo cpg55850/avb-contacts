@@ -5,3 +5,4 @@ sqlalchemy
 flask-migrate
 flask-cors
 gunicorn
+faker
