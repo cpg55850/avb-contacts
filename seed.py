@@ -11,7 +11,8 @@ import os
 import sys
 from faker import Faker
 from app import create_app, db
-from app.models.contact import Contact
+from app.models import Contact
+from app.models import ContactEmail
 
 # Load environment variables
 from dotenv import load_dotenv
@@ -29,10 +30,17 @@ def seed_contacts(n=20):
         try:
             contact = Contact(
                 name=fake.name(),
-                email=fake.unique.email(),
-                phone=fake.phone_number()
+                phone=fake.phone_number(),
             )
+
+            contact_email = ContactEmail(
+                email=fake.unique.email(),
+            )
+
+            contact.emails.append(contact_email)
+
             db.session.add(contact)
+            db.session.flush()  # ensures IDs assigned
             contacts_added += 1
         except Exception as e:
             # Skip if unique constraint fails

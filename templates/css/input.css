@@ -175,4 +175,27 @@
   .form-row-error {
     @apply text-destructive text-sm mt-1;
   }
+
+  /* Scrollbar styling */
+  aside {
+    @apply overflow-y-auto;
+  }
+
+  aside::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  aside::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  aside::-webkit-scrollbar-thumb {
+    background: var(--muted-foreground);
+    border-radius: 3px;
+    opacity: 0.3;
+  }
+
+  aside::-webkit-scrollbar-thumb:hover {
+    opacity: 0.5;
+  }
 }

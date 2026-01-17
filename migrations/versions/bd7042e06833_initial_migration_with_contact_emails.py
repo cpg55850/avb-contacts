@@ -1,8 +1,8 @@
-"""Initial migration
+"""Initial migration with Contact Emails
 
-Revision ID: 0b271d647a0b
+Revision ID: bd7042e06833
 Revises: 
-Create Date: 2026-01-16 00:48:04.009790
+Create Date: 2026-01-16 17:55:26.326736
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '0b271d647a0b'
+revision = 'bd7042e06833'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,11 +21,9 @@ def upgrade():
     op.create_table('contacts',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=120), nullable=False),
-    sa.Column('email', sa.String(length=120), nullable=False),
     sa.Column('phone', sa.String(length=50), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=False),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('email')
+    sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
 

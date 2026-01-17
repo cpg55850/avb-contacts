@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -12,15 +12,28 @@
   <body>
     <div class="flex h-screen">
       <!-- Left panel -->
-      <aside class="w-72 bg-sidebar space-y-4 border-r">
+      <aside
+        class="w-90 bg-sidebar space-y-4 border-r h-screen overflow-y-auto flex flex-col"
+      >
         <div class="p-6 border-b border-border">
           <h2 class="text-2xl font-semibold text-sidebar-foreground">
             Contacts
           </h2>
         </div>
         <ul class="space-y-1 px-6">
-          {% for c in contacts %}
-          <li>{{ c.name }}</li>
+          {% for contact in contacts %}
+          <li
+            class="p-2 hover:bg-sidebar-accent rounded cursor-pointer contact-item"
+            data-contact-id="{{ contact.id }}"
+            data-contact-name="{{ contact.name }}"
+          >
+            <div class="font-medium text-sidebar-foreground">
+              {{ contact.name }}
+            </div>
+            <div class="text-xs text-sidebar-foreground/60">
+              {% if contact.emails %} {{ contact.emails[0].email }} {% endif %}
+            </div>
+          </li>
           {% endfor %}
         </ul>
       </aside>
@@ -29,42 +42,79 @@
       <div class="flex flex-col justify-between h-full w-full p-6">
         <!-- Main content -->
         <div>
-          <h1 class="text-3xl font-bold mb-4 text-foreground">
-            Welcome to the Contacts App
-          </h1>
-          <p class="mb-6 text-muted-foreground">
-            Manage your contacts efficiently and easily.
-          </p>
-
-          <div class="flex space-x-4">
-            <div class="form-row">
-              <label class="form-row-label" for="firstName">First Name</label>
-              <input
-                type="text"
-                id="firstName"
-                class="form-row-input"
-                placeholder="Enter your first name"
-              />
-            </div>
-            <div class="form-row">
-              <label class="form-row-label" for="lastName">Last Name</label>
-              <input
-                type="text"
-                id="lastName"
-                class="form-row-input"
-                placeholder="Enter your last name"
-              />
+          <!-- Contact Details Section -->
+          <div
+            id="contactDetails"
+            class="p-4 bg-card rounded-lg border border-border hidden"
+          >
+            <h3 class="text-lg font-semibold text-foreground mb-4">
+              Contact Details
+            </h3>
+            <div class="space-y-3">
+              <div>
+                <p class="text-sm text-muted-foreground">Name</p>
+                <p id="detailName" class="text-foreground font-medium"></p>
+              </div>
+              <div>
+                <p class="text-sm text-muted-foreground">Phone</p>
+                <p id="detailPhone" class="text-foreground font-medium"></p>
+              </div>
+              <div>
+                <p class="text-sm text-muted-foreground">Emails</p>
+                <div id="detailEmails" class="space-y-1"></div>
+              </div>
+              <div>
+                <p class="text-sm text-muted-foreground">Created</p>
+                <p
+                  id="detailCreated"
+                  class="text-foreground font-medium text-sm"
+                ></p>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- Buttons -->
         <div>
-          <button class="btn btn-primary">Add Contact</button>
+          <button id="openAddContact" class="btn btn-primary">
+            Add Contact
+          </button>
           <button class="btn btn-destructive">Delete Contact</button>
         </div>
       </div>
     </div>
-    <script src="{{ url_for('static', filename='js/api.js') }}"></script>
+
+    <!-- Generic Modal -->
+    <div
+      id="genericModal"
+      class="fixed inset-0 z-50 hidden items-center justify-center"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="genericModalTitle"
+    >
+      <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+      <div
+        class="relative w-full max-w-lg mx-auto bg-card text-foreground rounded-lg border border-border shadow-xl p-6"
+      >
+        <div class="flex items-start justify-between mb-4">
+          <div>
+            <h2 id="genericModalTitle" class="text-xl font-semibold"></h2>
+            <p id="genericModalDesc" class="text-sm text-muted-foreground"></p>
+          </div>
+          <button
+            id="closeGenericModal"
+            class="btn btn-outline h-10 px-3"
+            aria-label="Close dialog"
+          >
+            ✕
+          </button>
+        </div>
+        <div id="genericModalContent"></div>
+      </div>
+    </div>
+    <script
+      type="module"
+      src="{{ url_for('static', filename='js/index.js') }}"
+    ></script>
   </body>
 </html>
