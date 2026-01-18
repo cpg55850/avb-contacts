@@ -1,0 +1,32 @@
+/* Modal system styles */
+.modal-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-content {
+  position: relative;
+  background: var(--color-background, #fff);
+  color: var(--color-foreground, #222);
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-border, #e5e7eb);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  padding: 1.5rem;
+  max-width: 32rem;
+  width: 100%;
+  z-index: 51;
+}
+.modal-content.danger {
+  border-color: #f87171;
+  background: var(--color-background, #fff);
+}
+.modal-wrapper .bg-black\/50 {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 50;
+}

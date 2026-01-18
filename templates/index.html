@@ -8,6 +8,10 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/output.css') }}"
     />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/modal.css') }}"
+    />
   </head>
   <body>
     <div class="flex h-screen">
@@ -30,9 +34,9 @@
             <div class="font-medium text-sidebar-foreground">
               {{ contact.name }}
             </div>
-            <div class="text-xs text-sidebar-foreground/60">
+            <!-- <div class="text-xs text-sidebar-foreground/60">
               {% if contact.emails %} {{ contact.emails[0].email }} {% endif %}
-            </div>
+            </div> -->
           </li>
           {% endfor %}
         </ul>
@@ -45,8 +49,28 @@
           <!-- Contact Details Section -->
           <div
             id="contactDetails"
-            class="p-4 bg-card rounded-lg border border-border hidden"
+            class="p-4 bg-card rounded-lg border border-border hidden relative"
           >
+            <button
+              id="openEditContact"
+              class="absolute top-4 right-4 btn btn-outline btn-sm"
+              title="Edit Contact"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-2.828 0L9 13zm0 0L7.757 14.243a2 2 0 002.828 2.828L13 15"
+                />
+              </svg>
+            </button>
             <h3 class="text-lg font-semibold text-foreground mb-4">
               Contact Details
             </h3>
@@ -84,34 +108,129 @@
       </div>
     </div>
 
-    <!-- Generic Modal -->
-    <div
-      id="genericModal"
-      class="fixed inset-0 z-50 hidden items-center justify-center"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="genericModalTitle"
-    >
-      <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+    <!-- Modal Container -->
+    <div id="modal-container"></div>
+
+    <!-- Modal Templates -->
+    <template id="tpl-AddContact">
       <div
-        class="relative w-full max-w-lg mx-auto bg-card text-foreground rounded-lg border border-border shadow-xl p-6"
+        class="modal-content add-contact text-foreground rounded-lg border border-border shadow-xl p-6 relative w-full max-w-lg mx-auto"
       >
-        <div class="flex items-start justify-between mb-4">
+        <h3>Add Contact</h3>
+        <form class="space-y-4">
           <div>
-            <h2 id="genericModalTitle" class="text-xl font-semibold"></h2>
-            <p id="genericModalDesc" class="text-sm text-muted-foreground"></p>
+            <label class="form-row-label" for="modalName">Name</label>
+            <input
+              id="modalName"
+              name="name"
+              type="text"
+              class="form-row-input"
+              placeholder="Jane Doe"
+              required
+            />
           </div>
-          <button
-            id="closeGenericModal"
-            class="btn btn-outline h-10 px-3"
-            aria-label="Close dialog"
-          >
-            ✕
+          <div>
+            <label class="form-row-label" for="modalEmail">Email</label>
+            <input
+              id="modalEmail"
+              name="email"
+              type="email"
+              class="form-row-input"
+              placeholder="jane@example.com"
+              required
+            />
+          </div>
+          <div>
+            <label class="form-row-label" for="modalPhone">Phone</label>
+            <input
+              id="modalPhone"
+              name="phone"
+              type="tel"
+              class="form-row-input"
+              placeholder="(555) 123-4567"
+            />
+          </div>
+          <div class="flex justify-end space-x-3 pt-2">
+            <button type="button" class="btn btn-outline" data-action="pop">
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary">Save Contact</button>
+          </div>
+        </form>
+      </div>
+    </template>
+    <template id="tpl-EditContact">
+      <div
+        class="modal-content edit-contact text-foreground rounded-lg border border-border shadow-xl p-6 relative w-full max-w-lg mx-auto"
+      >
+        <h3>Edit Contact</h3>
+        <form class="space-y-4">
+          <div>
+            <label class="form-row-label" for="editName">Name</label>
+            <input
+              id="editName"
+              name="name"
+              type="text"
+              class="form-row-input"
+              placeholder="Jane Doe"
+              required
+            />
+          </div>
+          <div>
+            <label class="form-row-label" for="editEmail">Email</label>
+            <input
+              id="editEmail"
+              name="email"
+              type="email"
+              class="form-row-input"
+              placeholder="jane@example.com"
+              required
+            />
+          </div>
+          <div>
+            <label class="form-row-label" for="editPhone">Phone</label>
+            <input
+              id="editPhone"
+              name="phone"
+              type="tel"
+              class="form-row-input"
+              placeholder="(555) 123-4567"
+            />
+          </div>
+          <div class="flex justify-between space-x-3 pt-2">
+            <button
+              type="button"
+              class="btn btn-destructive"
+              data-action="delete-contact"
+            >
+              Delete Contact
+            </button>
+            <div>
+              <button type="button" class="btn btn-outline" data-action="pop">
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-primary">
+                Save Changes
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </template>
+    <template id="tpl-DeleteConfirm">
+      <div
+        class="modal-content danger bg-background text-foreground rounded-lg border border-border shadow-xl p-6 relative w-full max-w-lg mx-auto"
+      >
+        <h3>Are you sure you want to delete this user?</h3>
+        <p>This cannot be undone.</p>
+        <div class="flex gap-2 mt-4">
+          <button class="btn btn-outline" data-action="pop">Cancel</button>
+          <button class="btn btn-destructive" data-action="confirm-delete">
+            Delete
           </button>
         </div>
-        <div id="genericModalContent"></div>
       </div>
-    </div>
+    </template>
     <script
       type="module"
       src="{{ url_for('static', filename='js/index.js') }}"
