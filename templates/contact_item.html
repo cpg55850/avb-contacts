@@ -1,0 +1,19 @@
+{% macro contact_item(contact) %}
+<li
+  class="p-2 hover:bg-sidebar-accent rounded cursor-pointer contact-item flex items-center gap-3"
+  data-contact-id="{{ contact.id }}"
+  data-contact-name="{{ contact.name }}"
+>
+  <div
+    class="w-8 h-8 rounded-full bg-slate-400 flex items-center justify-center text-lg font-bold text-white"
+  >
+    <span>{{ contact.name[0]|upper }}</span>
+  </div>
+  <div>
+    <div class="font-medium text-sidebar-foreground">{{ contact.name }}</div>
+    <!-- <div class="text-xs text-sidebar-foreground/60">
+      {% if contact.emails %} {{ contact.emails[0].email }} {% endif %}
+    </div> -->
+  </div>
+</li>
+{% endmacro %}

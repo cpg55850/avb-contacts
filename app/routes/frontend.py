@@ -5,5 +5,5 @@ frontend = Blueprint("frontend", __name__)
 
 @frontend.route("/")
 def index():
-    contacts = Contact.query.all()
+    contacts = Contact.query.order_by(Contact.name.asc()).all()
     return render_template("index.html", test="Hello, World!", contacts=contacts)
