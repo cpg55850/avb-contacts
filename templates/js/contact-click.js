@@ -9,6 +9,7 @@ export function attachContactClickHandlers() {
 
         // Store contact ID in the details section
         const detailsSection = document.getElementById("contactDetails");
+        const welcomeSection = document.getElementById("welcomeSection");
         detailsSection.dataset.contactId = contact.id;
 
         // Update display fields
@@ -35,6 +36,7 @@ export function attachContactClickHandlers() {
         }
 
         detailsSection.classList.remove("hidden");
+        welcomeSection.classList.add("hidden");
       } catch (error) {
         console.error("Error fetching contact:", error);
       }
