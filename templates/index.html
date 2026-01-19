@@ -10,7 +10,10 @@ content %}
         All Contacts
       </h2>
     </div>
-    <ul id="contactsList" class="space-y-1 px-6"></ul>
+    {% from "contact_item.html" import contact_item %}
+    <ul id="contactsList" class="space-y-1 px-6">
+      {% for contact in contacts %} {{ contact_item(contact) }} {% endfor %}
+    </ul>
   </aside>
 
   <!-- Main panel -->
