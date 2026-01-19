@@ -79,7 +79,7 @@ Navigate to `http://localhost:8000` in your browser.
 
 ## 🎨 Design Decisions
 
-- **Single-Server Architecture**: Flask serves both API and static files for simplified deployment.
+- **Single-Server Architecture**: Flask serves both API and static files for simplified deployment
 - **Vanilla JavaScript**: No framework overhead, faster load times, easier to understand
 - **Tailwind CSS**: Utility-first approach for rapid UI development
 - **SQLite**: Lightweight, zero-configuration database perfect for this use case
