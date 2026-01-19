@@ -60,10 +60,21 @@ def update_contact(contact_id: int) -> tuple:
 
     if "name" in data:
         contact.name = data["name"]
-    if "email" in data:
-        contact.email = data["email"]
     if "phone" in data:
         contact.phone = data["phone"]
+    
+    # Handle emails if provided
+    if "emails" in data:
+        emails = data["emails"]
+        if not isinstance(emails, list) or not emails:
+            return jsonify({"error": "Emails must be a non-empty list."}), 400
+        
+        # Remove existing emails
+        ContactEmail.query.filter_by(contact_id=contact.id).delete()
+        
+        # Add new emails
+        for email in emails:
+            db.session.add(ContactEmail(contact_id=contact.id, email=email))
 
     try:
         db.session.commit()

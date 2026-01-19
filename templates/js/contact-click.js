@@ -6,6 +6,12 @@ export function attachContactClickHandlers() {
       try {
         const response = await fetch(`/api/contacts/${contactId}`);
         const contact = await response.json();
+
+        // Store contact ID in the details section
+        const detailsSection = document.getElementById("contactDetails");
+        detailsSection.dataset.contactId = contact.id;
+
+        // Update display fields
         document.getElementById("detailName").textContent = contact.name;
         document.getElementById("detailPhone").textContent =
           contact.phone || "N/A";
@@ -19,7 +25,16 @@ export function attachContactClickHandlers() {
         });
         const createdDate = new Date(contact.created_at).toLocaleDateString();
         document.getElementById("detailCreated").textContent = createdDate;
-        document.getElementById("contactDetails").classList.remove("hidden");
+
+        // Store contact data for editing
+        detailsSection.dataset.contactData = JSON.stringify(contact);
+
+        // Ensure we're in display mode (not edit mode)
+        if (window.exitEditMode) {
+          window.exitEditMode();
+        }
+
+        detailsSection.classList.remove("hidden");
       } catch (error) {
         console.error("Error fetching contact:", error);
       }

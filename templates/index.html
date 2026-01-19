@@ -24,14 +24,35 @@ content %}
       <div
         id="contactDetails"
         class="p-4 bg-card rounded-lg border border-border hidden relative max-w-md w-full"
+        data-contact-id=""
       >
-        <button
-          id="openEditContact"
-          class="absolute top-4 right-4 w-10 h-10 btn btn-outline btn-sm"
-          title="Edit Contact"
-        >
-          <i class="fa fa-pencil text-sm"></i>
-        </button>
+        <!-- Edit/Save/Cancel buttons -->
+        <div id="editButtons" class="absolute top-4 right-4">
+          <button
+            id="editContactBtn"
+            class="w-10 h-10 btn btn-outline btn-sm"
+            title="Edit Contact"
+          >
+            <i class="fa fa-pencil text-sm"></i>
+          </button>
+        </div>
+        <div id="saveButtons" class="absolute top-4 right-4 hidden space-x-2">
+          <button
+            id="saveContactBtn"
+            class="btn btn-primary btn-sm"
+            title="Save Changes"
+          >
+            <i class="fa fa-check text-sm"></i>
+          </button>
+          <button
+            id="cancelEditBtn"
+            class="btn btn-outline btn-sm"
+            title="Cancel"
+          >
+            <i class="fa fa-times text-sm"></i>
+          </button>
+        </div>
+
         <h3 class="text-lg font-semibold text-foreground mb-4">
           Contact Details
         </h3>
@@ -39,14 +60,25 @@ content %}
           <div>
             <p class="text-sm text-muted-foreground">Name</p>
             <p id="detailName" class="text-foreground font-medium"></p>
+            <input
+              id="editName"
+              type="text"
+              class="hidden w-full px-3 py-2 border border-border rounded-md bg-background text-foreground"
+            />
           </div>
           <div>
             <p class="text-sm text-muted-foreground">Phone</p>
             <p id="detailPhone" class="text-foreground font-medium"></p>
+            <input
+              id="editPhone"
+              type="text"
+              class="hidden w-full px-3 py-2 border border-border rounded-md bg-background text-foreground"
+            />
           </div>
           <div>
             <p class="text-sm text-muted-foreground">Emails</p>
             <div id="detailEmails" class="space-y-1"></div>
+            <div id="editEmails" class="hidden space-y-2"></div>
           </div>
           <div>
             <p class="text-sm text-muted-foreground">Created</p>
