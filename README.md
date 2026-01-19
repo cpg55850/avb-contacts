@@ -5,11 +5,13 @@ A full-stack contacts/address book web application built with Flask and vanilla 
 ## 🛠️ Tech Stack
 
 **Frontend:**
+
 - Vanilla JavaScript (ES6+)
 - Tailwind CSS for styling
 - Jinja2 templates
 
 **Backend:**
+
 - Python 3.11+
 - Flask web framework
 - Flask-SQLAlchemy (ORM)
@@ -17,6 +19,7 @@ A full-stack contacts/address book web application built with Flask and vanilla 
 - Flask-Migrate (database migrations)
 
 **Database:**
+
 - SQLite3
 
 ## 📋 Prerequisites
@@ -65,6 +68,7 @@ npm run dev
 ```
 
 This will:
+
 - Start the Flask backend on `http://localhost:8000`
 - Watch and compile Tailwind CSS automatically
 - Enable hot-reload for both frontend and backend changes
@@ -75,7 +79,7 @@ Navigate to `http://localhost:8000` in your browser.
 
 ## 🎨 Design Decisions
 
-- **Single-Server Architecture**: Flask serves both API and static files for simplified deployment
+- **Single-Server Architecture**: Flask serves both API and static files for simplified deployment.
 - **Vanilla JavaScript**: No framework overhead, faster load times, easier to understand
 - **Tailwind CSS**: Utility-first approach for rapid UI development
 - **SQLite**: Lightweight, zero-configuration database perfect for this use case
@@ -91,6 +95,7 @@ Navigate to `http://localhost:8000` in your browser.
 ## 👤 Author
 
 **Charlie Graham**
+
 - Email: contact@charliegraham.dev
 - Website: [charliegraham.dev](https://charliegraham.dev)
 
