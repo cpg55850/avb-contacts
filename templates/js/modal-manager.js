@@ -73,7 +73,7 @@ document
       return;
     }
     // Handle data-action buttons
-    if (target.matches('[data-action="pop"]')) {
+    if (target.closest('[data-action="pop"]')) {
       window.app.pop();
       return;
     }

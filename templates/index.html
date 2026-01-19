@@ -23,27 +23,14 @@ content %}
       <!-- Contact Details Section -->
       <div
         id="contactDetails"
-        class="p-4 bg-card rounded-lg border border-border hidden relative"
+        class="p-4 bg-card rounded-lg border border-border hidden relative max-w-md w-full"
       >
         <button
           id="openEditContact"
-          class="absolute top-4 right-4 btn btn-outline btn-sm"
+          class="absolute top-4 right-4 w-10 h-10 btn btn-outline btn-sm"
           title="Edit Contact"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-2.828 0L9 13zm0 0L7.757 14.243a2 2 0 002.828 2.828L13 15"
-            />
-          </svg>
+          <i class="fa fa-pencil text-sm"></i>
         </button>
         <h3 class="text-lg font-semibold text-foreground mb-4">
           Contact Details
@@ -74,13 +61,20 @@ content %}
 
     <!-- Buttons -->
     <div>
-      <button id="openAddContact" class="btn btn-primary">Add Contact</button>
-      <button class="btn btn-destructive">Delete Contact</button>
+      <!-- <button id="openAddContact" class="btn btn-primary">Add Contact</button> -->
+      <button
+        id="openAddContact"
+        class="btn btn-primary fixed bottom-6 right-6 w-10 h-10 rounded-full text-2xl flex items-center justify-center shadow-lg hover:cursor-pointer transition z-50"
+        title="Add Contact"
+      >
+        <i class="fa fa-plus"></i>
+      </button>
     </div>
   </div>
 </div>
 
 {% include "modals.html" %}
+
 <script
   type="module"
   src="{{ url_for('static', filename='js/index.js') }}"
