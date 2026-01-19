@@ -28,25 +28,58 @@ function enterEditMode() {
   editEmailsDiv.classList.remove("hidden");
   editEmailsDiv.innerHTML = "";
 
-  if (contactData.emails && contactData.emails.length > 0) {
-    contactData.emails.forEach((email, index) => {
-      const emailInput = document.createElement("input");
-      emailInput.type = "email";
-      emailInput.className =
-        "w-full px-3 py-2 border border-border rounded-md bg-background text-foreground";
-      emailInput.value = email;
-      emailInput.dataset.emailIndex = index;
-      editEmailsDiv.appendChild(emailInput);
-    });
-  } else {
-    // Add one empty email field if no emails exist
+  // Helper function to create email input with delete button
+  const createEmailInputWithDelete = (emailValue = "") => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "relative group";
+
     const emailInput = document.createElement("input");
     emailInput.type = "email";
     emailInput.className =
-      "w-full px-3 py-2 border border-border rounded-md bg-background text-foreground";
+      "w-full px-3 py-2 pr-10 border border-border rounded-md bg-background text-foreground";
+    emailInput.value = emailValue;
     emailInput.placeholder = "Email address";
-    editEmailsDiv.appendChild(emailInput);
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.type = "button";
+    deleteBtn.className =
+      "absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-red-600 hover:text-red-800 w-6 h-6 flex items-center justify-center hover:cursor-pointer";
+    deleteBtn.innerHTML = '<i class="fa fa-trash text-sm"></i>';
+    deleteBtn.onclick = () => {
+      const emailInputs = editEmailsDiv.querySelectorAll("input[type='email']");
+      if (emailInputs.length > 1) {
+        wrapper.remove();
+      } else {
+        alert("At least one email is required");
+      }
+    };
+
+    wrapper.appendChild(emailInput);
+    wrapper.appendChild(deleteBtn);
+    return wrapper;
+  };
+
+  if (contactData.emails && contactData.emails.length > 0) {
+    contactData.emails.forEach((email, index) => {
+      editEmailsDiv.appendChild(createEmailInputWithDelete(email));
+    });
+  } else {
+    // Add one empty email field if no emails exist
+    editEmailsDiv.appendChild(createEmailInputWithDelete());
   }
+
+  // Add button to add more emails
+  const addEmailBtn = document.createElement("button");
+  addEmailBtn.type = "button";
+  addEmailBtn.className =
+    "mt-2 text-sm text-primary hover:text-primary-dark flex items-center gap-1 cursor-pointer";
+  addEmailBtn.innerHTML = '<i class="fa fa-plus"></i> Add another email';
+  addEmailBtn.onclick = () => {
+    const newEmailWrapper = createEmailInputWithDelete();
+    // Insert before the add button
+    editEmailsDiv.insertBefore(newEmailWrapper, addEmailBtn);
+  };
+  editEmailsDiv.appendChild(addEmailBtn);
 
   // Switch button visibility
   document.getElementById("editButtons").classList.add("hidden");
