@@ -1,4 +1,5 @@
 // Inline editing for contact details
+import { pushDeleteConfirmModal } from "./delete-contact-modal.js";
 
 let isEditMode = false;
 
@@ -81,6 +82,9 @@ function enterEditMode() {
   };
   editEmailsDiv.appendChild(addEmailBtn);
 
+  // Show delete contact link
+  document.getElementById("deleteContactSection").classList.remove("hidden");
+
   // Switch button visibility
   document.getElementById("editButtons").classList.add("hidden");
   document.getElementById("saveButtons").classList.remove("hidden");
@@ -101,6 +105,9 @@ function exitEditMode() {
   document.getElementById("detailName").classList.remove("hidden");
   document.getElementById("detailPhone").classList.remove("hidden");
   document.getElementById("detailEmails").classList.remove("hidden");
+
+  // Hide delete contact link
+  document.getElementById("deleteContactSection").classList.add("hidden");
 
   // Switch button visibility
   document.getElementById("saveButtons").classList.add("hidden");
@@ -204,6 +211,53 @@ async function saveChanges() {
   }
 }
 
+// Delete contact
+async function deleteContact() {
+  const detailsSection = document.getElementById("contactDetails");
+  const contactId = detailsSection.dataset.contactId;
+
+  if (!contactId) {
+    console.error("No contact ID found");
+    return;
+  }
+
+  // Use the existing modal
+  pushDeleteConfirmModal({
+    contactId: contactId,
+    onDelete: async () => {
+      try {
+        const response = await fetch(`/api/contacts/${contactId}`, {
+          method: "DELETE",
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          alert(errorData.error || "Failed to delete contact");
+          return;
+        }
+
+        // Hide the contact details section
+        detailsSection.classList.add("hidden");
+        document.getElementById("welcomeSection").classList.remove("hidden");
+
+        // Remove from contact list
+        const contactListItem = document.querySelector(
+          `.contact-item[data-contact-id="${contactId}"]`,
+        );
+        if (contactListItem) {
+          contactListItem.remove();
+        }
+
+        // Exit edit mode
+        exitEditMode();
+      } catch (error) {
+        console.error("Error deleting contact:", error);
+        alert("Failed to delete contact. Please try again.");
+      }
+    },
+  });
+}
+
 // Expose exitEditMode globally so contact-click.js can access it
 window.exitEditMode = exitEditMode;
 
@@ -212,6 +266,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const editBtn = document.getElementById("editContactBtn");
   const saveBtn = document.getElementById("saveContactBtn");
   const cancelBtn = document.getElementById("cancelEditBtn");
+  const deleteBtn = document.getElementById("deleteContactBtn");
 
   if (editBtn) {
     editBtn.addEventListener("click", (e) => {
@@ -231,6 +286,13 @@ document.addEventListener("DOMContentLoaded", () => {
     cancelBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       exitEditMode();
+    });
+  }
+
+  if (deleteBtn) {
+    deleteBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      deleteContact();
     });
   }
 });

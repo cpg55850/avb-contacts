@@ -55,6 +55,10 @@ class ModalManager {
       previousModal.style.display = "flex";
     }
   }
+
+  peek() {
+    return this.stack.length > 0 ? this.stack[this.stack.length - 1] : null;
+  }
 }
 
 window.app = new ModalManager("modal-container");

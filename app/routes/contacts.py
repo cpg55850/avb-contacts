@@ -83,3 +83,16 @@ def update_contact(contact_id: int) -> tuple:
         return jsonify({"error": "A contact with that email already exists."}), 400
 
     return jsonify(contact.to_dict()), 200
+
+@contacts.route("/<int:contact_id>", methods=["DELETE"])
+def delete_contact(contact_id: int) -> tuple:
+    contact = Contact.query.get(contact_id)
+    if not contact:
+        return jsonify({"error": "Contact not found."}), 404
+
+    # Delete associated emails first due to foreign key constraint
+    ContactEmail.query.filter_by(contact_id=contact.id).delete()
+    db.session.delete(contact)
+    db.session.commit()
+
+    return jsonify({"message": "Contact deleted successfully."}), 200
