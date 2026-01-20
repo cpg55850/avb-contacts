@@ -26,6 +26,19 @@ content %}
         All Contacts
       </h2>
     </div>
+    <div class="px-6">
+      <div class="relative">
+        <input
+          type="text"
+          id="contactSearch"
+          placeholder="Search contacts..."
+          class="w-full px-4 py-2 pl-10 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+        />
+        <i
+          class="fa fa-search absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+        ></i>
+      </div>
+    </div>
     {% from "contact_item.html" import contact_item %}
     <ul id="contactsList" class="space-y-1 px-6">
       {% for contact in contacts %} {{ contact_item(contact) }} {% endfor %}

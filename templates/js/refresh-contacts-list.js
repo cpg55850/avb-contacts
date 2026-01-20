@@ -1,4 +1,5 @@
 import { attachContactClickHandlers } from "./contact-click.js";
+import { resetSearch } from "./contact-search.js";
 
 // Function to refresh contacts list after add/edit/delete
 export async function refreshContactsList() {
@@ -9,6 +10,11 @@ export async function refreshContactsList() {
   contacts = contacts.sort((a, b) => a.name.localeCompare(b.name));
   const ul = document.querySelector("#contactsList");
   if (!ul) return;
+
+  // Get currently selected contact ID
+  const currentContactId =
+    document.getElementById("contactDetails")?.dataset.contactId;
+
   ul.innerHTML = "";
   contacts.forEach((contact) => {
     const li = document.createElement("li");
@@ -16,6 +22,11 @@ export async function refreshContactsList() {
       "p-2 hover:bg-sidebar-accent rounded cursor-pointer contact-item flex items-center gap-3";
     li.setAttribute("data-contact-id", contact.id);
     li.setAttribute("data-contact-name", contact.name);
+
+    // Highlight if this is the currently selected contact
+    if (contact.id == currentContactId) {
+      li.classList.add("bg-sidebar-accent", "border-l-4", "border-primary");
+    }
     li.innerHTML = `
       <div class="w-8 h-8 rounded-full bg-slate-400 dark:bg-slate-600 flex items-center justify-center text-lg font-bold text-white">
         <span>${contact.name[0]?.toUpperCase() || "?"}</span>
@@ -27,4 +38,5 @@ export async function refreshContactsList() {
     ul.appendChild(li);
   });
   attachContactClickHandlers();
+  resetSearch();
 }

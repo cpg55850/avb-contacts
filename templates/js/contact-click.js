@@ -5,6 +5,15 @@ export function attachContactClickHandlers() {
   document.querySelectorAll(".contact-item").forEach((item) => {
     item.addEventListener("click", async function () {
       const contactId = this.dataset.contactId;
+
+      // Remove highlight from all contacts
+      document.querySelectorAll(".contact-item").forEach((c) => {
+        c.classList.remove("bg-sidebar-accent", "border-l-4", "border-primary");
+      });
+
+      // Highlight this contact
+      this.classList.add("bg-sidebar-accent", "border-l-4", "border-primary");
+
       try {
         const response = await fetch(`/api/contacts/${contactId}`);
         const contact = await response.json();
