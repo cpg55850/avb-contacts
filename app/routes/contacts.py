@@ -3,7 +3,7 @@ from sqlalchemy.exc import IntegrityError
 
 from app import db
 from app.models import Contact, ContactEmail
-from app.helpers.validation import require_fields
+from app.helpers.validation import require_fields, validate_contact_data
 
 contacts = Blueprint("contacts", __name__, url_prefix="/contacts")
 
@@ -24,23 +24,24 @@ def get_contact(contact_id: int) -> tuple:
 @contacts.route("", methods=["POST"])
 def create_contact() -> tuple:
     data = request.get_json(silent=True) or {}
-    missing = require_fields(data, ["name", "emails"])
-    if missing:
-        return jsonify({"error": f"Missing required field(s): {', '.join(missing)}"}), 400
+    
+    # Validate contact data
+    validation_error = validate_contact_data(data, is_update=False)
+    if validation_error:
+        return jsonify({"error": validation_error}), 400
 
     contact = Contact(
-        name=data["name"],
-        phone=data.get("phone"),
+        first_name=data["firstName"].strip(),
+        last_name=data["lastName"].strip(),
+        phone=data.get("phone", "").strip() or None,
     )
     db.session.add(contact)
     db.session.flush()  # Get contact.id before adding emails
 
     # Add emails
     emails = data["emails"]
-    if not isinstance(emails, list) or not emails:
-        return jsonify({"error": "Emails must be a non-empty list."}), 400
     for email in emails:
-        db.session.add(ContactEmail(contact_id=contact.id, email=email))
+        db.session.add(ContactEmail(contact_id=contact.id, email=email.strip()))
 
     try:
         db.session.commit()
@@ -57,24 +58,29 @@ def update_contact(contact_id: int) -> tuple:
         return jsonify({"error": "Contact not found."}), 404
 
     data = request.get_json(silent=True) or {}
+    
+    # Validate contact data
+    validation_error = validate_contact_data(data, is_update=True)
+    if validation_error:
+        return jsonify({"error": validation_error}), 400
 
-    if "name" in data:
-        contact.name = data["name"]
+    if "firstName" in data:
+        contact.first_name = data["firstName"].strip()
+    if "lastName" in data:
+        contact.last_name = data["lastName"].strip()
     if "phone" in data:
-        contact.phone = data["phone"]
+        contact.phone = data["phone"].strip() or None
     
     # Handle emails if provided
     if "emails" in data:
         emails = data["emails"]
-        if not isinstance(emails, list) or not emails:
-            return jsonify({"error": "Emails must be a non-empty list."}), 400
         
         # Remove existing emails
         ContactEmail.query.filter_by(contact_id=contact.id).delete()
         
         # Add new emails
         for email in emails:
-            db.session.add(ContactEmail(contact_id=contact.id, email=email))
+            db.session.add(ContactEmail(contact_id=contact.id, email=email.strip()))
 
     try:
         db.session.commit()

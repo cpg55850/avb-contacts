@@ -28,9 +28,13 @@ def seed_contacts(n=20):
     
     for _ in range(n):
         try:
+            # Generate phone in consistent format: (XXX) XXX-XXXX
+            phone_number = fake.numerify('(###) ###-####')
+            
             contact = Contact(
-                name=fake.name(),
-                phone=fake.phone_number(),
+                first_name=fake.first_name(),
+                last_name=fake.last_name(),
+                phone=phone_number,
             )
 
             contact_email = ContactEmail(

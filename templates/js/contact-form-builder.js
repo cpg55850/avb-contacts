@@ -1,21 +1,60 @@
 // Reusable contact form builder for creating/editing contacts
+import toast from "./toast.js";
 
 export class ContactFormBuilder {
   constructor(containerElement) {
     this.container = containerElement;
   }
 
+  // Validation helpers
+  static isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  static isValidPhone(phone) {
+    if (!phone) return true; // Phone is optional
+    // Allow various phone formats: (123) 456-7890, 123-456-7890, 1234567890, +1 123 456 7890, etc.
+    const phoneRegex = /^[\d\s\-\(\)\+\.]+$/;
+    const digitsOnly = phone.replace(/\D/g, "");
+    return (
+      phoneRegex.test(phone) &&
+      digitsOnly.length >= 10 &&
+      digitsOnly.length <= 15
+    );
+  }
+
+  static normalizePhone(phone) {
+    if (!phone) return null;
+    return phone.trim();
+  }
+
   // Create the complete form structure
-  createForm({ name = "", phone = "", emails = [""] } = {}) {
+  createForm({
+    firstName = "",
+    lastName = "",
+    phone = "",
+    emails = [""],
+  } = {}) {
     this.container.innerHTML = `
       <div class="space-y-4">
         <div>
-          <label for="contactName" class="block text-sm font-medium mb-1">Name</label>
+          <label for="contactFirstName" class="block text-sm font-medium mb-1">First Name</label>
           <input
             type="text"
-            id="contactName"
+            id="contactFirstName"
             required
-            value="${name}"
+            value="${firstName}"
+            class="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground"
+          />
+        </div>
+        <div>
+          <label for="contactLastName" class="block text-sm font-medium mb-1">Last Name</label>
+          <input
+            type="text"
+            id="contactLastName"
+            required
+            value="${lastName}"
             class="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground"
           />
         </div>
@@ -93,18 +132,24 @@ export class ContactFormBuilder {
     if (emailInputs.length > 1) {
       wrapper.remove();
     } else {
-      alert("At least one email is required");
+      toast.warning("At least one email is required");
     }
   }
 
   // Get form values
   getFormData() {
-    const name = this.container.querySelector("#contactName").value.trim();
+    const firstName = this.container
+      .querySelector("#contactFirstName")
+      .value.trim();
+    const lastName = this.container
+      .querySelector("#contactLastName")
+      .value.trim();
     const phone = this.container.querySelector("#contactPhone").value.trim();
     const emails = this.getEmailValues();
 
     return {
-      name,
+      firstName,
+      lastName,
       phone: phone || null,
       emails,
     };
@@ -121,16 +166,64 @@ export class ContactFormBuilder {
 
   // Validate form
   validate() {
-    const { name, emails } = this.getFormData();
+    const { firstName, lastName, phone, emails } = this.getFormData();
 
-    if (!name) {
-      alert("Name is required");
+    // Validate first name
+    if (!firstName) {
+      toast.error("First name is required");
+      this.container.querySelector("#contactFirstName")?.focus();
       return false;
     }
 
-    if (emails.length === 0) {
-      alert("At least one email is required");
+    if (firstName.length > 60) {
+      toast.error("First name must be 60 characters or less");
+      this.container.querySelector("#contactFirstName")?.focus();
       return false;
+    }
+
+    // Validate last name
+    if (!lastName) {
+      toast.error("Last name is required");
+      this.container.querySelector("#contactLastName")?.focus();
+      return false;
+    }
+
+    if (lastName.length > 60) {
+      toast.error("Last name must be 60 characters or less");
+      this.container.querySelector("#contactLastName")?.focus();
+      return false;
+    }
+
+    // Validate phone
+    if (phone && !ContactFormBuilder.isValidPhone(phone)) {
+      toast.error("Please enter a valid phone number (10-15 digits)");
+      this.container.querySelector("#contactPhone")?.focus();
+      return false;
+    }
+
+    // Validate emails
+    if (emails.length === 0) {
+      toast.error("At least one email is required");
+      return false;
+    }
+
+    // Check for valid email format
+    for (const email of emails) {
+      if (!ContactFormBuilder.isValidEmail(email)) {
+        toast.error(`Invalid email format: ${email}`);
+        return false;
+      }
+    }
+
+    // Check for duplicate emails
+    const emailSet = new Set();
+    for (const email of emails) {
+      const lowerEmail = email.toLowerCase();
+      if (emailSet.has(lowerEmail)) {
+        toast.error(`Duplicate email found: ${email}`);
+        return false;
+      }
+      emailSet.add(lowerEmail);
     }
 
     return true;

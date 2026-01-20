@@ -85,7 +85,8 @@ class ContactEditor {
     // Initialize form builder with contact data
     this.formBuilder = new ContactFormBuilder(this.elements.editContainer);
     this.formBuilder.createForm({
-      name: contactData.name || "",
+      firstName: contactData.firstName || "",
+      lastName: contactData.lastName || "",
       phone: contactData.phone || "",
       emails: contactData.emails || [],
     });
