@@ -1,6 +1,7 @@
 import { refreshContactsList } from "./refresh-contacts-list.js";
 import { createModal } from "./modal-builder.js";
 import { ContactFormBuilder } from "./contact-form-builder.js";
+import toast from "./toast.js";
 
 export function pushAddContactModal() {
   const modal = createModal({
@@ -54,11 +55,12 @@ export function pushAddContactModal() {
       if (res.ok) {
         window.app.pop();
         await refreshContactsList();
+        toast.success("Contact added successfully!");
       } else {
-        alert(data.error || "Failed to add contact.");
+        toast.error(data.error || "Failed to add contact.");
       }
     } catch (err) {
-      alert("Network error.");
+      toast.error("Network error. Please try again.");
     } finally {
       submitBtn.disabled = false;
       submitBtn.innerHTML = originalContent;

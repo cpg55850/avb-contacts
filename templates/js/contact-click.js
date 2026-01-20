@@ -1,4 +1,6 @@
 // Detail fetch on contact click
+import toast from "./toast.js";
+
 export function attachContactClickHandlers() {
   document.querySelectorAll(".contact-item").forEach((item) => {
     item.addEventListener("click", async function () {
@@ -39,6 +41,7 @@ export function attachContactClickHandlers() {
         welcomeSection.classList.add("hidden");
       } catch (error) {
         console.error("Error fetching contact:", error);
+        toast.error("Failed to load contact details. Please try again.");
       }
     });
   });

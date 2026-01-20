@@ -1,6 +1,7 @@
 // Inline editing for contact details
 import { pushDeleteConfirmModal } from "./delete-contact-modal.js";
 import { ContactFormBuilder } from "./contact-form-builder.js";
+import toast from "./toast.js";
 
 class ContactEditor {
   constructor() {
@@ -120,7 +121,7 @@ class ContactEditor {
 
       if (!response.ok) {
         const errorData = await response.json();
-        alert(errorData.error || "Failed to update contact");
+        toast.error(errorData.error || "Failed to update contact");
         return;
       }
 
@@ -129,9 +130,10 @@ class ContactEditor {
       this.updateListItem(updatedContact);
       this.detailsSection.dataset.contactData = JSON.stringify(updatedContact);
       this.exitEditMode();
+      toast.success("Contact updated successfully!");
     } catch (error) {
       console.error("Error updating contact:", error);
-      alert("Failed to update contact. Please try again.");
+      toast.error("Failed to update contact. Please try again.");
     }
   }
 
@@ -184,7 +186,7 @@ class ContactEditor {
 
           if (!response.ok) {
             const errorData = await response.json();
-            alert(errorData.error || "Failed to delete contact");
+            toast.error(errorData.error || "Failed to delete contact");
             return;
           }
 
@@ -197,9 +199,10 @@ class ContactEditor {
           listItem?.remove();
 
           this.exitEditMode();
+          toast.success("Contact deleted successfully!");
         } catch (error) {
           console.error("Error deleting contact:", error);
-          alert("Failed to delete contact. Please try again.");
+          toast.error("Failed to delete contact. Please try again.");
         }
       },
     });
