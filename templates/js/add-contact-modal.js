@@ -56,6 +56,17 @@ export function pushAddContactModal() {
         window.app.pop();
         await refreshContactsList();
         toast.success("Contact added successfully!");
+
+        // Auto-select the newly created contact
+        const newContactId = data.id;
+        if (newContactId) {
+          const newContactItem = document.querySelector(
+            `.contact-item[data-contact-id="${newContactId}"]`,
+          );
+          if (newContactItem) {
+            newContactItem.click();
+          }
+        }
       } else {
         toast.error(data.error || "Failed to add contact.");
       }

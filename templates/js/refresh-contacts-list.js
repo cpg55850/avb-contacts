@@ -17,7 +17,7 @@ export async function refreshContactsList() {
     li.setAttribute("data-contact-id", contact.id);
     li.setAttribute("data-contact-name", contact.name);
     li.innerHTML = `
-      <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-lg font-bold text-white">
+      <div class="w-8 h-8 rounded-full bg-slate-400 dark:bg-slate-600 flex items-center justify-center text-lg font-bold text-white">
         <span>${contact.name[0]?.toUpperCase() || "?"}</span>
       </div>
       <div>
