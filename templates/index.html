@@ -64,29 +64,18 @@ content %}
         <h3 class="text-lg font-semibold text-foreground mb-4">
           Contact Details
         </h3>
-        <div class="space-y-3">
+        <div id="displayFields" class="space-y-3">
           <div>
             <p class="text-sm text-muted-foreground">Name</p>
             <p id="detailName" class="text-foreground font-medium"></p>
-            <input
-              id="editName"
-              type="text"
-              class="hidden w-full px-3 py-2 border border-border rounded-md bg-background text-foreground"
-            />
           </div>
           <div>
             <p class="text-sm text-muted-foreground">Phone</p>
             <p id="detailPhone" class="text-foreground font-medium"></p>
-            <input
-              id="editPhone"
-              type="text"
-              class="hidden w-full px-3 py-2 border border-border rounded-md bg-background text-foreground"
-            />
           </div>
           <div>
             <p class="text-sm text-muted-foreground">Emails</p>
             <div id="detailEmails" class="space-y-1"></div>
-            <div id="editEmails" class="hidden space-y-2"></div>
           </div>
           <div>
             <p class="text-sm text-muted-foreground">Created</p>
@@ -96,6 +85,7 @@ content %}
             ></p>
           </div>
         </div>
+        <div id="editEmails" class="hidden"></div>
         <!-- Delete Contact Link -->
         <div
           id="deleteContactSection"

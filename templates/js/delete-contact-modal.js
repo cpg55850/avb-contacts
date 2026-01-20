@@ -1,19 +1,32 @@
-// Export a function to create and push a delete confirmation modal to the stack
-export function pushDeleteConfirmModal({ contactId = "", onDelete }) {
-  window.app.push("DeleteConfirm", contactId);
+import { createModal } from "./modal-builder.js";
 
-  // Get the modal that was just pushed
-  const modalWrapper = window.app.peek();
+export function pushDeleteConfirmModal({
+  contactId = "",
+  contactName = "",
+  onDelete,
+}) {
+  const displayText = contactName || `#${contactId}`;
+  const modal = createModal({
+    title: "Delete Contact",
+    content: `
+      <p>Are you sure you want to delete <strong>${displayText}</strong>?</p>
+      <p class="text-sm text-muted-foreground mt-2">This cannot be undone.</p>
+    `,
+    buttons: `
+      <button class="btn btn-outline cancel-btn">Cancel</button>
+      <button class="btn btn-destructive confirm-btn">Delete</button>
+    `,
+  });
 
-  // Attach handlers immediately
-  modalWrapper.querySelector(".cancel-btn")?.addEventListener("click", () => {
+  // Attach event handlers
+  modal.querySelector(".cancel-btn").addEventListener("click", () => {
     window.app.pop();
   });
 
-  modalWrapper
-    .querySelector(".confirm-btn")
-    ?.addEventListener("click", async () => {
-      if (typeof onDelete === "function") await onDelete();
-      window.app.pop();
-    });
+  modal.querySelector(".confirm-btn").addEventListener("click", async () => {
+    if (typeof onDelete === "function") await onDelete();
+    window.app.pop();
+  });
+
+  window.app.push(modal);
 }
