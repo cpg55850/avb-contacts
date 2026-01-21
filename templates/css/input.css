@@ -126,6 +126,19 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* Handle iOS safe area for bottom navigation bar */
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Ensure full viewport height accounting for safe areas */
+  html {
+    height: 100vh;
+    height: -webkit-fill-available;
+  }
+
+  body {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
   }
 }
 
