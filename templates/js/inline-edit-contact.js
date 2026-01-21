@@ -91,11 +91,32 @@ class ContactEditor {
       emails: contactData.emails || [],
     });
 
+    // Add Enter key handler for quick save
+    this.handleEnterKey = (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        this.saveChanges();
+      }
+    };
+    this.elements.editContainer.addEventListener(
+      "keydown",
+      this.handleEnterKey,
+    );
+
     this.setMode("edit");
   }
 
   exitEditMode() {
     if (!this.isEditMode) return;
+
+    // Remove Enter key handler
+    if (this.handleEnterKey) {
+      this.elements.editContainer.removeEventListener(
+        "keydown",
+        this.handleEnterKey,
+      );
+      this.handleEnterKey = null;
+    }
 
     this.formBuilder = null;
     this.setMode("display");
