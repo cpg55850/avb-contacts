@@ -57,11 +57,42 @@ DATABASE_PATH=app/db/app.sqlite
 ### 4. Install frontend dependencies
 
 ```bash
-cd ..  # Return to project root
 npm install
 ```
 
-### 5. Run the development server
+### 5. Initialize the database
+
+Initialize the database and run migrations:
+
+```bash
+# Initialize migration repository (only needed once)
+flask db init
+
+# Create initial migration
+flask db migrate -m "Initial migration"
+
+# Apply migrations to create tables
+flask db upgrade
+```
+
+### 6. Seed the database (optional)
+
+Populate the database with dummy contact data for testing:
+
+```bash
+# Add 20 dummy contacts
+python seed.py
+
+# Reset database and add 50 contacts
+python seed.py --reset --count 50
+```
+
+**Seed script options:**
+
+- `--reset`: Drops all tables and recreates them (⚠️ destroys all data)
+- `--count N`: Specify number of contacts to generate (default: 20)
+
+### 7. Run the development server
 
 ```bash
 npm run dev
@@ -73,7 +104,7 @@ This will:
 - Watch and compile Tailwind CSS automatically
 - Enable hot-reload for both frontend and backend changes
 
-### 6. Open the app
+### 8. Open the app
 
 Navigate to `http://localhost:8000` in your browser.
 
@@ -92,7 +123,7 @@ Navigate to `http://localhost:8000` in your browser.
 - CORS enabled for API flexibility
 - Database migrations supported via Flask-Migrate
 
-## 👤 Author
+## �👤 Author
 
 **Charlie Graham**
 
